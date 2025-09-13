@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Assistant Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #4e6ef5 0%, #3b5bdb 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eaeaea;
+        }
+        
+        .user-message {
+            background: #4e6ef5;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .option-button {
+            background: #e9ecf7;
+            border: none;
+            border-radius: 18px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3b5bdb;
+            font-weight: 500;
+        }
+        
+        .option-button:hover {
+            background: #d7def5;
+            transform: translateY(-2px);
+        }
+        
+        .option-button.selected {
+            background: #4e6ef5;
+            color: white;
+        }
+        
+        .input-container {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-container input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            outline: none;
+            font-size: 15px;
+        }
+        
+        .input-container input:focus {
+            border-color: #4e6ef5;
+            box-shadow: 0 0 0 2px rgba(78, 110, 245, 0.2);
+        }
+        
+        .input-container button {
+            background: #4e6ef5;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .input-container button:hover {
+            background: #3b5bdb;
+        }
+        
+        .info-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .step-indicator {
+            font-size: 12px;
+            color: #4e6ef5;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .payment-section {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .payment-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        .confirmation-box {
+            background: #f8f9fa;
+            border-left: 4px solid #4e6ef5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .service-icon {
+            font-size: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .flow-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .flow-number {
+            background: #4e6ef5;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-plane"></i> Travel Assistant</h1>
+            <p>Your personal travel planning companion</p>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot-message">
+                Hi 👋 I'm your travel assistant. Can I get your name?
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message here..." autocomplete="off">
+            <button id="sendButton"><i class="fas fa-paper-plane"></i> Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            
+            let currentStep = 'welcome';
+            let userData = {
+                name: '',
+                service: '',
+                flightDetails: {
+                    flightType: '',
+                    departureCity: '',
+                    passengers: {
+                        adults: 0,
+                        children: 0,
+                        childrenAges: []
+                    },
+                    multipleDestinations: '',
+                    destinationCity: '',
+                    preferredTime: '',
+                    tripType: '',
+                    flexibleDates: '',
+                    preferredAirlines: '',
+                    stopovers: ''
+                },
+                hotelDetails: {
+                    hotelType: '',
+                    travelDates: '',
+                    multipleLocations: '',
+                    passengers: {
+                        adults: 0,
+                        children: 0,
+                        childrenAges: []
+                    },
+                    specificHotel: '',
+                    category: ''
+                },
+                holidayDetails: {
+                    whatsapp: '',
+                    email: '',
+                    destination: '',
+                    departureCity: '',
+                    travelDates: '',
+                    passengers: {
+                        adults: 0,
+                        children: 0,
+                        childrenAges: []
+                    },
+                    rooms: 0,
+                    multipleDestinations: '',
+                    hotelCategory: '',
+                    mealPlan: '',
+                    tourType: ''
+                },
+                visaDetails: {
+                    isUrgent: false,
+                    visaHelpType: '',
+                    additionalServices: [],
+                    personalInfo: {
+                        fullName: '',
+                        dob: '',
+                        nationality: '',
+                        passportNumber: '',
+                        passportExpiry: ''
+                    },
+                    contactInfo: {
+                        address: '',
+                        phone: '',
+                        email: ''
+                    },
+                    travelInfo: {
+                        purpose: '',
+                        travelDates: '',
+                        multipleCountries: ''
+                    },
+                    employmentInfo: {
+                        status: '',
+                        employerName: '',
+                        monthlyIncome: ''
+                    }
+                },
+                insuranceDetails: {
+                    personalInfo: {
+                        fullName: '',
+                        gender: '',
+                        dob: '',
+                        passportNumber: '',
+                        nationality: ''
+                    },
+                    travelDates: {
+                        startDate: '',
+                        endDate: ''
+                    },
+                    travelInfo: {
+                        destinationCountry: '',
+                        primaryCity: ''
+                    },
+                    coverageType: '',
+                    contactInfo: {
+                        phone: '',
+                        email: ''
+                    }
+                }
+            };
+            
+            // Initialize the chatbot
+            function init() {
+                userInput.focus();
+                
+                // Event listeners
+                sendButton.addEventListener('click', handleUserInput);
+                userInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleUserInput();
+                    }
+                });
+            }
+            
+            // Add message to chat
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
+                messageDiv.innerHTML = text;
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            // Show options to user
+            function showOptions(options, isMultiple = false) {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.innerHTML = option;
+                    button.addEventListener('click', function() {
+                        if (isMultiple) {
+                            this.classList.toggle('selected');
+                        } else {
+                            document.querySelectorAll('.option-button').forEach(btn => {
+                                btn.classList.remove('selected');
+                            });
+                            this.classList.add('selected');
+                            handleOptionSelect(option);
+                        }
+                    });
+                    optionsContainer.appendChild(button);
+                });
+                
+                if (isMultiple) {
+                    const confirmButton = document.createElement('button');
+                    confirmButton.className = 'option-button';
+                    confirmButton.innerHTML = 'Confirm Selection';
+                    confirmButton.style.background = '#4e6ef5';
+                    confirmButton.style.color = 'white';
+                    confirmButton.addEventListener('click', function() {
+                        const selectedOptions = [];
+                        document.querySelectorAll('.option-button.selected').forEach(btn => {
+                            selectedOptions.push(btn.textContent);
+                        });
+                        if (selectedOptions.length > 0) {
+                            handleOptionSelect(selectedOptions.join(','));
+                        } else {
+                            addMessage('Please select at least one option.', false);
+                        }
+                    });
+                    optionsContainer.appendChild(confirmButton);
+                }
+                
+                chatContainer.appendChild(optionsContainer);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            // Handle user input
+            function handleUserInput() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+                
+                addMessage(message, true);
+                userInput.value = '';
+                
+                switch(currentStep) {
+                    case 'welcome':
+                        userData.name = message;
+                        addMessage(`Thanks ${message}! What can I help you with today?`);
+                        showOptions(['Visa', 'Flight', 'Hotel Booking', 'Insurance', 'Holiday Booking']);
+                        currentStep = 'select_service';
+                        break;
+                        
+                    // Visa flow steps
+                    case 'visa_personal_name':
+                        userData.visaDetails.personalInfo.fullName = message;
+                        addMessage(`<div class="step-indicator">Step 1 - Personal Information</div>Your date of birth (DD/MM/YYYY)?`);
+                        currentStep = 'visa_personal_dob';
+                        break;
+                        
+                    case 'visa_personal_dob':
+                        userData.visaDetails.personalInfo.dob = message;
+                        addMessage(`Your nationality?`);
+                        currentStep = 'visa_personal_nationality';
+                        break;
+                        
+                    case 'visa_personal_nationality':
+                        userData.visaDetails.personalInfo.nationality = message;
+                        addMessage(`Your passport number?`);
+                        currentStep = 'visa_personal_passport';
+                        break;
+                        
+                    case 'visa_personal_passport':
+                        userData.visaDetails.personalInfo.passportNumber = message;
+                        addMessage(`When does your passport expire?`);
+                        currentStep = 'visa_personal_expiry';
+                        break;
+                        
+                    case 'visa_personal_expiry':
+                        userData.visaDetails.personalInfo.passportExpiry = message;
+                        addMessage(`<div class="step-indicator">Step 2 - Contact Information</div>What is your residential address?`);
+                        currentStep = 'visa_contact_address';
+                        break;
+                        
+                    case 'visa_contact_address':
+                        userData.visaDetails.contactInfo.address = message;
+                        addMessage(`Your phone number?`);
+                        currentStep = 'visa_contact_phone';
+                        break;
+                        
+                    case 'visa_contact_phone':
+                        userData.visaDetails.contactInfo.phone = message;
+                        addMessage(`Your email address?`);
+                        currentStep = 'visa_contact_email';
+                        break;
+                        
+                    case 'visa_contact_email':
+                        userData.visaDetails.contactInfo.email = message;
+                        addMessage(`<div class="step-indicator">Step 3 - Travel Information</div>What is the purpose of your visit?`);
+                        showOptions(['Tourism', 'Business', 'Family visit', 'Study', 'Other']);
+                        currentStep = 'visa_travel_purpose';
+                        break;
+                        
+                    case 'visa_travel_dates':
+                        userData.visaDetails.travelInfo.travelDates = message;
+                        addMessage(`If multiple countries please mention them and how long will stay there for each location?`);
+                        currentStep = 'visa_multiple_countries';
+                        break;
+                        
+                    case 'visa_multiple_countries':
+                        userData.visaDetails.travelInfo.multipleCountries = message;
+                        addMessage(`<div class="step-indicator">Step 4 - Employment & Finance</div>Are you employed, self-employed, or student?`);
+                        showOptions(['Employed', 'Self-employed', 'Student', 'Other']);
+                        currentStep = 'visa_employment_status';
+                        break;
+                        
+                    case 'visa_employer_name':
+                        userData.visaDetails.employmentInfo.employerName = message;
+                        addMessage(`Your monthly income (or financial means available for the trip)?`);
+                        currentStep = 'visa_income';
+                        break;
+                        
+                    case 'visa_income':
+                        userData.visaDetails.employmentInfo.monthlyIncome = message;
+                        
+                        // Create summary of selected services
+                        let summary = `You are looking for: <strong>${userData.visaDetails.visaHelpType}</strong>`;
+                        if (userData.visaDetails.additionalServices.length > 0 && 
+                            !userData.visaDetails.additionalServices.includes('Not required')) {
+                            summary += ` along with <strong>${userData.visaDetails.additionalServices.join(', ')}</strong>`;
+                        }
+                        
+                        addMessage(`<div class="confirmation-box">✅ Thank you! I have collected all the required details.<br><br>
+                            ${summary}<br><br>
+                            We will now use this to schedule your Visa appointment and prepare your checklist.</div>`);
+                        
+                        addMessage(`Please confirm all details to proceed with payment.`);
+                        showOptions(['Yes', 'No']);
+                        currentStep = 'visa_confirmation';
+                        break;
+                        
+                    // Flight flow steps
+                    case 'flight_departure':
+                        userData.flightDetails.departureCity = message;
+                        addMessage(`How many adults?`);
+                        currentStep = 'flight_passengers';
+                        break;
+                        
+                    case 'flight_passengers':
+                        userData.flightDetails.passengers.adults = message;
+                        addMessage(`How many children (if any)? Please mention ages for children.`);
+                        currentStep = 'flight_children';
+                        break;
+                        
+                    case 'flight_children':
+                        userData.flightDetails.passengers.childrenAges = message;
+                        addMessage(`Do you have multiple destinations? Please mention all if yes.`);
+                        currentStep = 'flight_multiple_destinations';
+                        break;
+                        
+                    case 'flight_multiple_destinations':
+                        userData.flightDetails.multipleDestinations = message;
+                        addMessage(`What is your destination city and airport (To)?`);
+                        currentStep = 'flight_destination';
+                        break;
+                        
+                    case 'flight_destination':
+                        userData.flightDetails.destinationCity = message;
+                        addMessage(`What is your preferred time of travel? (Morning/Afternoon/Evening, if any)`);
+                        currentStep = 'flight_preferred_time';
+                        break;
+                        
+                    case 'flight_preferred_time':
+                        userData.flightDetails.preferredTime = message;
+                        addMessage(`Is this a one-way or round-trip?`);
+                        showOptions(['One-way', 'Round-trip']);
+                        currentStep = 'flight_trip_type';
+                        break;
+                        
+                    case 'flight_flexible_dates':
+                        userData.flightDetails.flexibleDates = message;
+                        addMessage(`Do you have any preferred airlines?`);
+                        currentStep = 'flight_preferred_airlines';
+                        break;
+                        
+                    case 'flight_preferred_airlines':
+                        userData.flightDetails.preferredAirlines = message;
+                        addMessage(`Do you prefer direct flights only or are stopovers acceptable?`);
+                        showOptions(['Direct Only', 'Stopovers Acceptable']);
+                        currentStep = 'flight_stopovers';
+                        break;
+                        
+                    // Hotel flow steps
+                    case 'hotel_travel_dates':
+                        userData.hotelDetails.travelDates = message;
+                        addMessage(`If you require multiple locations to stay, please mention all along with dates.`);
+                        currentStep = 'hotel_multiple_locations';
+                        break;
+                        
+                    case 'hotel_multiple_locations':
+                        userData.hotelDetails.multipleLocations = message;
+                        addMessage(`How many adults and children? Please mention children's ages.`);
+                        currentStep = 'hotel_passengers';
+                        break;
+                        
+                    case 'hotel_passengers':
+                        userData.hotelDetails.passengers = message;
+                        addMessage(`Do you have a specific hotel in mind?`);
+                        currentStep = 'hotel_specific_name';
+                        break;
+                        
+                    case 'hotel_specific_name':
+                        userData.hotelDetails.specificHotel = message;
+                        addMessage(`What category of hotel are you looking for?`);
+                        showOptions(['Budget', 'Standard', 'Luxury', 'Premium']);
+                        currentStep = 'hotel_category';
+                        break;
+                        
+                    // Holiday booking flow steps
+                    case 'holiday_whatsapp':
+                        userData.holidayDetails.whatsapp = message;
+                        addMessage(`What is your email address?`);
+                        currentStep = 'holiday_email';
+                        break;
+                        
+                    case 'holiday_email':
+                        userData.holidayDetails.email = message;
+                        addMessage(`Which destination(s) are you interested in?`);
+                        currentStep = 'holiday_destination';
+                        break;
+                        
+                    case 'holiday_destination':
+                        userData.holidayDetails.destination = message;
+                        addMessage(`What is your departure city?`);
+                        currentStep = 'holiday_departure';
+                        break;
+                        
+                    case 'holiday_departure':
+                        userData.holidayDetails.departureCity = message;
+                        addMessage(`What are your preferred travel dates?`);
+                        currentStep = 'holiday_dates';
+                        break;
+                        
+                    case 'holiday_dates':
+                        userData.holidayDetails.travelDates = message;
+                        addMessage(`How many adults and children? Please mention children's ages.`);
+                        currentStep = 'holiday_passengers';
+                        break;
+                        
+                    case 'holiday_passengers':
+                        userData.holidayDetails.passengers = message;
+                        addMessage(`How many rooms do you need?`);
+                        currentStep = 'holiday_rooms';
+                        break;
+                        
+                    case 'holiday_rooms':
+                        userData.holidayDetails.rooms = message;
+                        addMessage(`Do you have multiple destinations in mind? If yes, please mention them.`);
+                        currentStep = 'holiday_multiple_destinations';
+                        break;
+                        
+                    case 'holiday_multiple_destinations':
+                        userData.holidayDetails.multipleDestinations = message;
+                        addMessage(`What hotel category are you interested in?`);
+                        showOptions(['Budget', 'Standard', 'Luxury', 'Premium']);
+                        currentStep = 'holiday_hotel_category';
+                        break;
+                        
+                    case 'holiday_meal_plan':
+                        userData.holidayDetails.mealPlan = message;
+                        addMessage(`What type of tour would you prefer?`);
+                        showOptions(['Sharing Basis', 'Private Basis']);
+                        currentStep = 'holiday_tour_type';
+                        break;
+                        
+                    case 'holiday_tour_type':
+                        userData.holidayDetails.tourType = message;
+                        
+                        // Create summary of holiday details
+                        let holidaySummary = `
+                            <div class="confirmation-box">
+                                <strong>Holiday Package Request Summary:</strong><br><br>
+                                <strong>WhatsApp:</strong> ${userData.holidayDetails.whatsapp}<br>
+                                <strong>Email:</strong> ${userData.holidayDetails.email}<br>
+                                <strong>Destination(s):</strong> ${userData.holidayDetails.destination}<br>
+                                <strong>Departure City:</strong> ${userData.holidayDetails.departureCity}<br>
+                                <strong>Travel Dates:</strong> ${userData.holidayDetails.travelDates}<br>
+                                <strong>Passengers:</strong> ${userData.holidayDetails.passengers}<br>
+                                <strong>Rooms:</strong> ${userData.holidayDetails.rooms}<br>
+                                <strong>Multiple Destinations:</strong> ${userData.holidayDetails.multipleDestinations}<br>
+                                <strong>Hotel Category:</strong> ${userData.holidayDetails.hotelCategory}<br>
+                                <strong>Meal Plan:</strong> ${userData.holidayDetails.mealPlan}<br>
+                                <strong>Tour Type:</strong> ${userData.holidayDetails.tourType}<br>
+                            </div>
+                        `;
+                        
+                        addMessage(holidaySummary);
+                        addMessage(`Please confirm all details to proceed.`);
+                        showOptions(['Confirm', 'Make Changes']);
+                        currentStep = 'holiday_confirmation';
+                        break;
+                        
+                    // Insurance flow steps
+                    case 'insurance_personal_name':
+                        userData.insuranceDetails.personalInfo.fullName = message;
+                        addMessage(`<div class="step-indicator">Step 1 - Personal Information</div>What is your gender?`);
+                        showOptions(['Male', 'Female', 'Other']);
+                        currentStep = 'insurance_gender';
+                        break;
+                        
+                    case 'insurance_dob':
+                        userData.insuranceDetails.personalInfo.dob = message;
+                        addMessage(`Your passport number?`);
+                        currentStep = 'insurance_passport';
+                        break;
+                        
+                    case 'insurance_passport':
+                        userData.insuranceDetails.personalInfo.passportNumber = message;
+                        addMessage(`Your nationality?`);
+                        currentStep = 'insurance_nationality';
+                        break;
+                        
+                    case 'insurance_nationality':
+                        userData.insuranceDetails.personalInfo.nationality = message;
+                        addMessage(`<div class="step-indicator">Step 2 - Travel Coverage Dates</div>When should your coverage begin? (DD/MM/YYYY)`);
+                        currentStep = 'insurance_start_date';
+                        break;
+                        
+                    case 'insurance_start_date':
+                        userData.insuranceDetails.travelDates.startDate = message;
+                        addMessage(`When should your coverage end? (DD/MM/YYYY)`);
+                        currentStep = 'insurance_end_date';
+                        break;
+                        
+                    case 'insurance_end_date':
+                        userData.insuranceDetails.travelDates.endDate = message;
+                        addMessage(`<div class="step-indicator">Step 3 - Travel Details</div>Which country/countries are you traveling to?`);
+                        currentStep = 'insurance_destination';
+                        break;
+                        
+                    case 'insurance_destination':
+                        userData.insuranceDetails.travelInfo.destinationCountry = message;
+                        addMessage(`What is the primary city of stay? (optional)`);
+                        currentStep = 'insurance_city';
+                        break;
+                        
+                    case 'insurance_city':
+                        userData.insuranceDetails.travelInfo.primaryCity = message;
+                        addMessage(`<div class="step-indicator">Step 4 - Insurance Coverage</div>Do you need basic coverage (visa minimum €30,000 medical coverage) or extended coverage (baggage loss, trip cancellation, etc.)?`);
+                        showOptions(['Basic Coverage', 'Extended Coverage']);
+                        currentStep = 'insurance_coverage_type';
+                        break;
+                        
+                    case 'insurance_phone':
+                        userData.insuranceDetails.contactInfo.phone = message;
+                        addMessage(`What is your email address? (where the insurance policy PDF will be sent)`);
+                        currentStep = 'insurance_email';
+                        break;
+                        
+                    case 'insurance_email':
+                        userData.insuranceDetails.contactInfo.email = message;
+                        
+                        // Create summary of insurance details
+                        let insuranceSummary = `
+                            <div class="confirmation-box">
+                                <strong>Insurance Request Summary:</strong><br><br>
+                                <strong>Name:</strong> ${userData.insuranceDetails.personalInfo.fullName}<br>
+                                <strong>Gender:</strong> ${userData.insuranceDetails.personalInfo.gender}<br>
+                                <strong>Date of Birth:</strong> ${userData.insuranceDetails.personalInfo.dob}<br>
+                                <strong>Passport Number:</strong> ${userData.insuranceDetails.personalInfo.passportNumber}<br>
+                                <strong>Nationality:</strong> ${userData.insuranceDetails.personalInfo.nationality}<br>
+                                <strong>Coverage Start:</strong> ${userData.insuranceDetails.travelDates.startDate}<br>
+                                <strong>Coverage End:</strong> ${userData.insuranceDetails.travelDates.endDate}<br>
+                                <strong>Destination:</strong> ${userData.insuranceDetails.travelInfo.destinationCountry}<br>
+                                <strong>Primary City:</strong> ${userData.insuranceDetails.travelInfo.primaryCity}<br>
+                                <strong>Coverage Type:</strong> ${userData.insuranceDetails.coverageType}<br>
+                                <strong>Phone:</strong> ${userData.insuranceDetails.contactInfo.phone}<br>
+                                <strong>Email:</strong> ${userData.insuranceDetails.contactInfo.email}<br>
+                            </div>
+                        `;
+                        
+                        addMessage(insuranceSummary);
+                        addMessage(`Please confirm all details to proceed.`);
+                        showOptions(['Confirm', 'Make Changes']);
+                        currentStep = 'insurance_confirmation';
+                        break;
+                }
+            }
+            
+            // Handle option selection
+            function handleOptionSelect(option) {
+                addMessage(option, true);
+                
+                switch(currentStep) {
+                    case 'select_service':
+                        userData.service = option;
+                        if (option === 'Visa') {
+                            addMessage(`Is this an urgent request? (priority queue, higher charges)`);
+                            showOptions(['Yes', 'No']);
+                            currentStep = 'visa_urgent';
+                        } else if (option === 'Flight') {
+                            addMessage(`Do you need a dummy flight booking for visa or actual flight tickets for travel?`);
+                            showOptions(['Dummy Booking', 'Actual Tickets']);
+                            currentStep = 'flight_type';
+                        } else if (option === 'Hotel Booking') {
+                            addMessage(`Do you need a dummy hotel booking for visa or actual hotel booking for travel?`);
+                            showOptions(['Dummy Booking', 'Actual Booking']);
+                            currentStep = 'hotel_type';
+                        } else if (option === 'Insurance') {
+                            addMessage(`<div class="step-indicator">Step 1 - Personal Information</div>Let me help you with travel insurance. Please provide your full name as per passport:`);
+                            currentStep = 'insurance_personal_name';
+                        } else if (option === 'Holiday Booking') {
+                            addMessage(`Let me help you with holiday booking. What is your WhatsApp number?`);
+                            currentStep = 'holiday_whatsapp';
+                        }
+                        break;
+                        
+                    case 'visa_urgent':
+                        userData.visaDetails.isUrgent = (option === 'Yes');
+                        addMessage(`For visa assistance, we can help with:<br>
+                            👉 Appointment Letter 👉 Cover Letter 👉 Sponsorship Letter 👉 Entire Visa Process`);
+                        showOptions(['Appointment Letter', 'Cover Letter', 'Sponsorship Letter', 'Entire Visa Process']);
+                        currentStep = 'select_visa_type';
+                        break;
+                        
+                    case 'select_visa_type':
+                        userData.visaDetails.visaHelpType = option;
+                        addMessage(`Do you also want help with Flights, Hotels, or Insurance along with your visa?`);
+                        showOptions(['Flights', 'Hotels', 'Insurance', 'Not required'], true);
+                        currentStep = 'visa_additional_services';
+                        break;
+                        
+                    case 'visa_additional_services':
+                        userData.visaDetails.additionalServices = option.split(',');
+                        addMessage(`Now as per visa process we need some information can you please share the same:<br>
+                            Hi 👋 I'm your travel assistant. I'll help you collect all the details required for your Visa application.<br>
+                            Can I start with your full name (as per passport)?`);
+                        currentStep = 'visa_personal_name';
+                        break;
+                        
+                    case 'visa_travel_purpose':
+                        userData.visaDetails.travelInfo.purpose = option;
+                        addMessage(`What is your travel dates to the country?`);
+                        currentStep = 'visa_travel_dates';
+                        break;
+                        
+                    case 'visa_employment_status':
+                        userData.visaDetails.employmentInfo.status = option;
+                        addMessage(`Please provide your employer/organization/school name & address.`);
+                        currentStep = 'visa_employer_name';
+                        break;
+                        
+                    case 'visa_confirmation':
+                        if (option === 'Yes') {
+                            addMessage(`<div class="payment-section">💳 Please proceed with payment.<br>
+                                <button class="payment-button">Pay Now</button><br>
+                                <span class="info-text">A payment slip will be generated for download after payment.</span>
+                            </div>`);
+                            
+                            // Add payment success message after a delay
+                            setTimeout(() => {
+                                addMessage(`✅ Thanks for your payment! We've received your details. Our agent will get in touch shortly to verify and proceed with your booking.`);
+                            }, 2000);
+                            
+                            currentStep = 'completed';
+                        } else {
+                            addMessage(`Please review your details and confirm when ready.`);
+                            // In a real app, you would show the details again for review
+                        }
+                        break;
+                        
+                    // Flight flow options
+                    case 'flight_type':
+                        userData.flightDetails.flightType = option;
+                        addMessage(`Please provide your departure city and airport (From):`);
+                        currentStep = 'flight_departure';
+                        break;
+                        
+                    case 'flight_trip_type':
+                        userData.flightDetails.tripType = option;
+                        addMessage(`Are your dates flexible? (Yes/No)`);
+                        currentStep = 'flight_flexible_dates';
+                        break;
+                        
+                    case 'flight_stopovers':
+                        userData.flightDetails.stopovers = option;
+                        
+                        if (userData.flightDetails.flightType === 'Dummy Booking') {
+                            addMessage(`<div class="confirmation-box">✅ Thank you! We've collected all your flight details.<br><br>
+                                Please proceed with the $50 payment for the dummy flight booking.</div>`);
+                            addMessage(`Would you like to proceed with payment?`);
+                            showOptions(['Yes', 'No']);
+                            currentStep = 'flight_dummy_payment';
+                        } else {
+                            addMessage(`<div class="confirmation-box">✅ Thank you! We've collected all your flight details.<br><br>
+                                Our agent will get back to you shortly with the best flight options.</div>`);
+                            currentStep = 'completed';
+                        }
+                        break;
+                        
+                    case 'flight_dummy_payment':
+                        if (option === 'Yes') {
+                            addMessage(`<div class="payment-section">💳 Please proceed with payment of $50 for the dummy flight booking.<br>
+                                <button class="payment-button">Pay Now</button><br>
+                                <span class="info-text">A payment slip will be generated for download after payment.</span>
+                            </div>`);
+                            
+                            setTimeout(() => {
+                                addMessage(`✅ Thanks for your payment! Your dummy flight booking request has been received. Our agent will get in touch shortly.`);
+                            }, 2000);
+                            
+                            currentStep = 'completed';
+                        } else {
+                            addMessage(`Please review your details and confirm when ready.`);
+                        }
+                        break;
+                        
+                    // Hotel flow options
+                    case 'hotel_type':
+                        userData.hotelDetails.hotelType = option;
+                        addMessage(`What are your travel dates?`);
+                        currentStep = 'hotel_travel_dates';
+                        break;
+                        
+                    case 'hotel_category':
+                        userData.hotelDetails.category = option;
+                        
+                        if (userData.hotelDetails.hotelType === 'Dummy Booking') {
+                            addMessage(`<div class="confirmation-box">✅ Thank you! We've collected all your hotel details.<br><br>
+                                Please proceed with the $20 payment for each hotel holding.</div>`);
+                            addMessage(`Would you like to proceed with payment?`);
+                            showOptions(['Yes', 'No']);
+                            currentStep = 'hotel_dummy_payment';
+                        } else {
+                            addMessage(`<div class="confirmation-box">✅ Thank you! We've collected all your hotel details.<br><br>
+                                Our agent will get back to you shortly with the best hotel options.</div>`);
+                            currentStep = 'completed';
+                        }
+                        break;
+                        
+                    case 'hotel_dummy_payment':
+                        if (option === 'Yes') {
+                            addMessage(`<div class="payment-section">💳 Please proceed with payment of $20 for each hotel holding.<br>
+                                <button class="payment-button">Pay Now</button><br>
+                                <span class="info-text">A payment slip will be generated for download after payment.</span>
+                            </div>`);
+                            
+                            setTimeout(() => {
+                                addMessage(`✅ Thanks for your payment! Your dummy hotel booking request has been received. Our agent will get in touch shortly.`);
+                            }, 2000);
+                            
+                            currentStep = 'completed';
+                        } else {
+                            addMessage(`Please review your details and confirm when ready.`);
+                        }
+                        break;
+                        
+                    // Holiday booking flow options
+                    case 'holiday_hotel_category':
+                        userData.holidayDetails.hotelCategory = option;
+                        addMessage(`What meal plan would you prefer?`);
+                        showOptions(['Breakfast Only', 'Half Board', 'Full Board', 'All Inclusive']);
+                        currentStep = 'holiday_meal_plan';
+                        break;
+                        
+                    case 'holiday_meal_plan':
+                        userData.holidayDetails.mealPlan = option;
+                        addMessage(`What type of tour would you prefer?`);
+                        showOptions(['Sharing Basis', 'Private Basis']);
+                        currentStep = 'holiday_tour_type';
+                        break;
+                        
+                    case 'holiday_confirmation':
+                        if (option === 'Confirm') {
+                            addMessage(`✅ We've shared your details with our agent. They will contact you with package details shortly.`);
+                            currentStep = 'completed';
+                        } else {
+                            addMessage(`Let's start over with your holiday booking. What is your WhatsApp number?`);
+                            currentStep = 'holiday_whatsapp';
+                        }
+                        break;
+                        
+                    // Insurance flow options
+                    case 'insurance_gender':
+                        userData.insuranceDetails.personalInfo.gender = option;
+                        addMessage(`Your date of birth (DD/MM/YYYY)?`);
+                        currentStep = 'insurance_dob';
+                        break;
+                        
+                    case 'insurance_coverage_type':
+                        userData.insuranceDetails.coverageType = option;
+                        addMessage(`<div class="step-indicator">Step 5 - Contact Information</div>What is your phone number?`);
+                        currentStep = 'insurance_phone';
+                        break;
+                        
+                    case 'insurance_confirmation':
+                        if (option === 'Confirm') {
+                            addMessage(`✅ We've shared your details with our agent. They will contact you with insurance options shortly.`);
+                            currentStep = 'completed';
+                        } else {
+                            addMessage(`Let's start over with your insurance. What is your full name as per passport?`);
+                            currentStep = 'insurance_personal_name';
+                        }
+                        break;
+                }
+            }
+            
+            // Initialize the chatbot
+            init();
+        });
+    </script>
+</body>
+</html>
